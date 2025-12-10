@@ -18,4 +18,4 @@ spec:
         - name: test1
           image: nginx:stable
           ports:
-            - containerPort: 7777
+            - containerPort: 80
