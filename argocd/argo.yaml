@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/marc-hendrik-sieverding/argocd-test
+    repoURL: https://github.com/marc-hendrik-sieverding/argocd-test.git
     targetRevision: main
     path: app
   destination:
