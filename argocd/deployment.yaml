@@ -19,11 +19,12 @@ spec:
         args:
           - |
             if [ ! -f /usr/share/nginx/html/.initialized ]; then
-              git clone https://github.com/DEIN-USER/DEIN-WEBSITE-REPO.git /tmp/site &&
-              cp -r /tmp/site/* /usr/share/nginx/html/ &&
+              echo "Copying website content from GitHub..."
+              git clone https://github.com/marc-hendrik-sieverding/argocd-test.git /tmp/repo
+              cp -r /tmp/repo/website/* /usr/share/nginx/html/
               touch /usr/share/nginx/html/.initialized
             else
-              echo "HTML bereits vorhanden, kein Kopieren nötig."
+              echo "Website already initialized, skipping copy."
             fi
         volumeMounts:
         - name: html-volume
