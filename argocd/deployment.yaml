@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx
-  labels:
-    app: nginx
 spec:
   replicas: 1
   selector:
@@ -14,8 +12,33 @@ spec:
       labels:
         app: nginx
     spec:
+      initContainers:
+      - name: copy-html
+        image: alpine/git
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            if [ ! -f /usr/share/nginx/html/.initialized ]; then
+              git clone https://github.com/DEIN-USER/DEIN-WEBSITE-REPO.git /tmp/site &&
+              cp -r /tmp/site/* /usr/share/nginx/html/ &&
+              touch /usr/share/nginx/html/.initialized
+            else
+              echo "HTML bereits vorhanden, kein Kopieren nötig."
+            fi
+        volumeMounts:
+        - name: html-volume
+          mountPath: /usr/share/nginx/html
+
       containers:
-        - name: test1
-          image: nginx:stable
-          ports:
-            - containerPort: 80
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html-volume
+          mountPath: /usr/share/nginx/html
+
+      volumes:
+      - name: html-volume
+        persistentVolumeClaim:
+          claimName: nginx-html-pvc
